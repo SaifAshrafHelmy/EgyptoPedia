@@ -7,11 +7,49 @@ from flask_login import (
     current_user,
     logout_user,
 )
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-print(DeclarativeBase)
+Base = declarative_base()
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column("id", Integer, primary_key=True)
+    username = Column("username", String, nullable=False)
+    password = Column("password", String, nullable=False)
+    name = Column("name", String, nullable=False)
+
+    def __init__(self, id, username, password, name):
+        self.id = id
+        self.username = username
+        self.password = password
+        self.name = name
+
+    def __repr__(self):
+        return f"({self.id}) {self.username} {self.name}"
+
+
+engine = create_engine("sqlite:///egyptopedia.db", echo=True)
+Base.metadata.create_all(bind=engine)
+
+
+Session = sessionmaker(bind=engine)
+session = Session()
+
+
+# user1 = User(3, "ahmed", "123", "Ahmed Sabry")
+# session.add(user1)
+# session.commit()
+
+results = session.query(User).filter(User.id == 5)
+for r in results:
+    print(r)
+
+
+##flask-login stuff
 login_manager = LoginManager()
 
 
@@ -25,7 +63,7 @@ app.secret_key = "super secrety stringy"  # Change this!
 users = {"foo@bar.tld": {"password": "secret"}}
 
 
-class User(UserMixin):
+class FLUser(UserMixin):
     pass
 
 
@@ -34,7 +72,7 @@ def user_loader(email):
     if email not in users:
         return
 
-    user = User()
+    user = FLUser()
     user.id = email
     return user
 
@@ -44,7 +82,7 @@ def request_loader(request):
     email = request.form.get("email")
     if email not in users:
         return
-    user = User()
+    user = FLUser()
     user.id = email
     return user
 
@@ -62,7 +100,7 @@ def login():
 
     email = request.form["email"]
     if email in users and request.form["password"] == users[email]["password"]:
-        user = User()
+        user = FLUser()
         user.id = email
         login_user(user)
         return redirect(url_for("protected"))
