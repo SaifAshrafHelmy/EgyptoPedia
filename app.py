@@ -1,125 +1,111 @@
-from flask import Flask, request, redirect, url_for
-from flask_login import (
-    LoginManager,
-    login_required,
-    UserMixin,
-    login_user,
-    current_user,
-    logout_user,
-)
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-Base = declarative_base()
-
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column("id", Integer, primary_key=True)
-    username = Column("username", String, nullable=False)
-    password = Column("password", String, nullable=False)
-    name = Column("name", String, nullable=False)
-
-    def __init__(self, id, username, password, name):
-        self.id = id
-        self.username = username
-        self.password = password
-        self.name = name
-
-    def __repr__(self):
-        return f"({self.id}) {self.username} {self.name}"
-
-
-engine = create_engine("sqlite:///egyptopedia.db", echo=True)
-Base.metadata.create_all(bind=engine)
-
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-
-# user1 = User(3, "ahmed", "123", "Ahmed Sabry")
-# session.add(user1)
-# session.commit()
-
-results = session.query(User).filter(User.id == 5)
-for r in results:
-    print(r)
-
-
-##flask-login stuff
+from flask import Flask, render_template, redirect, request, flash
+from database import db_session, init_db
+from models import User
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 login_manager = LoginManager()
+from sqlalchemy import create_engine, MetaData, Table
+from flask_bcrypt import Bcrypt
+
+
+# from markupsafe import escape
+
 
 
 app = Flask(__name__)
+
+bcrypt = Bcrypt(app)
+
+
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
+
+engine = create_engine('sqlite:///database.db')
+metadata = MetaData(bind=engine)
+users = Table('users', metadata, autoload=True)
+
+
+
 login_manager.init_app(app)
-
-
-app.secret_key = "super secrety stringy"  # Change this!
-
-
-users = {"foo@bar.tld": {"password": "secret"}}
-
-
-class FLUser(UserMixin):
-    pass
+app.secret_key = b'_5#@@y2L"F5Q8d\n\xec]/'
 
 
 @login_manager.user_loader
-def user_loader(email):
-    if email not in users:
-        return
-
-    user = FLUser()
-    user.id = email
-    return user
+def load_user(user_id):
+    return User.get(user_id)
 
 
-@login_manager.request_loader
-def request_loader(request):
-    email = request.form.get("email")
-    if email not in users:
-        return
-    user = FLUser()
-    user.id = email
-    return user
+
+
+@app.route("/")
+def hello_world():
+    return render_template("home.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "GET":
-        return """
-               <form action='login' method='POST'>
-                <input type='text' name='email' id='email' placeholder='email'/>
-                <input type='password' name='password' id='password' placeholder='password'/>
-                <input type='submit' name='submit'/>
-               </form>
-               """
+    if current_user.is_authenticated == True:
+        flash('You are already logged in.', 'warning')
+        return redirect("/")
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        user = users.select(users.c.username == username).execute().first()
+        if(user):
+            if (bcrypt.check_password_hash(user.password, password)):
+              M_User = load_user(user.id)
+              login_user(M_User, remember=True);
+              flash('Logged in successfully.', 'success')
+              return redirect("/")
+            
+        flash('Invalid credentials, try again.', 'error')
+        return render_template("login.html")
 
-    email = request.form["email"]
-    if email in users and request.form["password"] == users[email]["password"]:
-        user = FLUser()
-        user.id = email
-        login_user(user)
-        return redirect(url_for("protected"))
 
-    return "Bad login"
+
+    return render_template("login.html")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username")
+        raw_password = request.form.get("password")
+        pw_hash = bcrypt.generate_password_hash(raw_password)
+
+        u = User(username, pw_hash)
+        db_session.add(u)
+        db_session.commit()
+
+        return render_template("register.html")
+
+    return render_template("register.html")
+
 
 
 @app.route("/protected")
 @login_required
-def protected():
-    return "Logged in as: " + current_user.id
-
+def myProtected():
+    return "YOU HAVE ACCESS"
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
-    return "Logged out"
+    return redirect("/")
 
 
-@login_manager.unauthorized_handler
-def unauthorized_handler():
-    return "Unauthorized", 401
+
+
+
+
+
+
+if __name__ == '__main__':
+    # Initialize the database
+    init_db()
+
+    # Run the Flask application
+    app.run()
