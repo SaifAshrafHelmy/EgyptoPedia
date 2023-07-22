@@ -5,7 +5,8 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 login_manager = LoginManager()
 from sqlalchemy import create_engine, MetaData, Table
 from flask_bcrypt import Bcrypt
-
+from flask_wtf.csrf import CSRFProtect
+from forms import MyForm
 
 # from markupsafe import escape
 
@@ -14,6 +15,8 @@ from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 
 bcrypt = Bcrypt(app)
+# csrf = CSRFProtect(app)
+
 
 
 
@@ -46,42 +49,66 @@ def hello_world():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if current_user.is_authenticated == True:
+    
+
+    if current_user.is_authenticated:
         flash('You are already logged in.', 'warning')
         return redirect("/")
+    
+    form = MyForm()
+
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        user = users.select(users.c.username == username).execute().first()
-        if(user):
-            if (bcrypt.check_password_hash(user.password, password)):
-              M_User = load_user(user.id)
-              login_user(M_User, remember=True);
-              flash('Logged in successfully.', 'success')
-              return redirect("/")
-            
-        flash('Invalid credentials, try again.', 'error')
-        return render_template("login.html")
+        if form.validate_on_submit():
+            username = request.form.get("username")
+            password = request.form.get("password")
+            user = users.select(users.c.username == username).execute().first()
+            if(user):
+                if (bcrypt.check_password_hash(user.password, password)):
+                    M_User = load_user(user.id)
+                    login_user(M_User, remember=True);
+                    flash('Logged in successfully.', 'success')
+                    return redirect("/")
+                else:
+                    flash("Wrong password, try again.", 'error')
+                    
+            else:
+                flash("Username doesn't exit", 'error')
 
 
+    return render_template("login2.html", form=form)
 
-    return render_template("login.html")
+
+        
+
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    
+    if current_user.is_authenticated:
+        flash('You are already logged in.', 'warning')
+        return redirect("/")
+
+    form = MyForm()
+
     if request.method == "POST":
-        username = request.form.get("username")
-        raw_password = request.form.get("password")
-        pw_hash = bcrypt.generate_password_hash(raw_password)
+        if form.validate_on_submit():
 
-        u = User(username, pw_hash)
-        db_session.add(u)
-        db_session.commit()
+            username = request.form.get("username")
+            raw_password = request.form.get("password")
+            pw_hash = bcrypt.generate_password_hash(raw_password)
 
-        return render_template("register.html")
+            user = User(username, pw_hash)
+            db_session.add(user)
+            db_session.commit()
 
-    return render_template("register.html")
+            M_User = load_user(user.id)
+            login_user(M_User, remember=True);
+            flash('Registered successfully.', 'success')
+            return redirect("/")
+
+
+    return render_template("register2.html", form=form)
 
 
 

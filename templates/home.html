@@ -40,9 +40,13 @@
   <div class="row">
     <div class="col-6 offset-3 mx-5 my-5">
       <h1>Hello to the Homepage!</h1>
+
+      {%     if current_user.is_authenticated     %}
+      <a class="btn btn-danger" href="/logout">Logout</a>
+      {% else %}
       <a class="btn btn-success" href="/login">Login</a>
       <a class="btn btn-success" href="/register">Register</a>
-    
+      {% endif %}
     </div>
   </div>
 
@@ -60,6 +64,9 @@
             </ul>
         {% endif %}
     {% endwith %}
+    {%     if current_user.is_authenticated     %}
+    <p style="margin-top: 30%; margin-left: 90%;">you're logged in as <b><i>{{current_user.username}}</i></b></p>
+    {% endif %}
 
   <script src="https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
