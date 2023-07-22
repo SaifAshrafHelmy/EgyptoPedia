@@ -42,35 +42,61 @@
  <div class="row">
   <div class="col-4 offset-4 mt-5">
     <form action="/login" method="POST">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username" autofocus>
-      </div>
+      {{ form.csrf_token }}
   
       <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password">
-      </div>
+          <label for="{{ form.username.id }}" class="form-label">Username</label>
+          <input type="text" class="form-control" id="{{ form.username.id }}" name="{{ form.username.name }}" autofocus>
+          {% if form.username.errors %}
+          {% for error in form.username.errors %}
+            <div class="flash flash-error">
+                {{ error }}
+            </div>
+            
+            {% endfor %}
+          {% endif %}
+    </div>
+
+  
+      <div class="mb-3">
+          <label for="{{ form.password.id }}" class="form-label">Password</label>
+          <input type="password" class="form-control" id="{{ form.password.id }}" name="{{ form.password.name }}">
+
+      {% if form.password.errors %}
+      {% for error in form.password.errors %}
+        <div class="flash flash-error">
+            {{ error }}
+        </div>
+        
+        {% endfor %}
+      {% endif %}
+    </div>
+
   
       <button type="submit" class="btn btn-primary">Login</button>
+    <ul class="errors">
 
-    </form>
+  </form>
+
+  
   </div>
  </div>
 
 
- {% with messages = get_flashed_messages(with_categories=true) %}
- {% if messages %}
-            <ul class="flashes">
-              {% for category, message in messages %}
-              <div class="flash flash-{{ category }}">
-                  {{ message }}
-              </div>
-          {% endfor %}
-
-            </ul>
-        {% endif %}
-    {% endwith %}
+ <div class="row">
+  <div class="col-4 offset-4 mt-2">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+                 {% for category, message in messages %}
+                 <div class="flash flash-{{ category }}">
+                     {{ message }}
+                 </div>
+                 
+                 {% endfor %}
+           {% endif %}
+       {% endwith %}
+  </div>
+</div>
 
   <script src="https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>

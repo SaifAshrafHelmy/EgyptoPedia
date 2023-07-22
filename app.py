@@ -15,7 +15,8 @@ from forms import MyForm
 app = Flask(__name__)
 
 bcrypt = Bcrypt(app)
-# csrf = CSRFProtect(app)
+csrf = CSRFProtect(app)
+
 
 
 
@@ -75,7 +76,7 @@ def login():
                 flash("Username doesn't exit", 'error')
 
 
-    return render_template("login2.html", form=form)
+    return render_template("login.html", form=form)
 
 
         
@@ -108,7 +109,7 @@ def register():
             return redirect("/")
 
 
-    return render_template("register2.html", form=form)
+    return render_template("register.html", form=form)
 
 
 
