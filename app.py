@@ -1,14 +1,11 @@
 from flask import Flask, render_template, redirect, request, flash
-from database import db_session, init_db
-from models import User
+from models import db, User, City, Attraction
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 login_manager = LoginManager()
-from sqlalchemy import create_engine, MetaData, Table
 from flask_bcrypt import Bcrypt
 from flask_wtf.csrf import CSRFProtect
 from forms import MyForm
 
-# from markupsafe import escape
 
 
 
@@ -19,21 +16,21 @@ csrf = CSRFProtect(app)
 
 
 
-
-
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    db_session.remove()
-
-
-engine = create_engine('sqlite:///database.db')
-metadata = MetaData(bind=engine)
-users = Table('users', metadata, autoload=True)
-
-
-
+# initialize the login manager
 login_manager.init_app(app)
 app.secret_key = b'_5#@@y2L"F5Q8d\n\xec]/'
+
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///egy.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# initialize the app with the database extension
+db.init_app(app)
+
+# create all db tables
+with app.app_context():
+    db.create_all()
+
 
 
 @login_manager.user_loader
@@ -62,7 +59,11 @@ def login():
         if form.validate_on_submit():
             username = request.form.get("username")
             password = request.form.get("password")
-            user = users.select(users.c.username == username).execute().first()
+            try:
+                user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one()
+            except:
+                user = None
+
             if(user):
                 if (bcrypt.check_password_hash(user.password, password)):
                     M_User = load_user(user.id)
@@ -99,9 +100,9 @@ def register():
             raw_password = request.form.get("password")
             pw_hash = bcrypt.generate_password_hash(raw_password)
 
-            user = User(username, pw_hash)
-            db_session.add(user)
-            db_session.commit()
+            user = User(username = username,password =  pw_hash)
+            db.session.add(user)
+            db.session.commit()
 
             M_User = load_user(user.id)
             login_user(M_User, remember=True);
@@ -131,9 +132,11 @@ def logout():
 
 
 
-if __name__ == '__main__':
-    # Initialize the database
-    init_db()
+if __name__ == "__main__":
+    app.run(debug=True)
 
-    # Run the Flask application
-    app.run()
+
+
+
+    
+
