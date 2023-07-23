@@ -33,6 +33,7 @@ with app.app_context():
 
 
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
@@ -59,6 +60,7 @@ def login():
         if form.validate_on_submit():
             username = request.form.get("username")
             password = request.form.get("password")
+
             try:
                 user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one()
             except:
