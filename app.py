@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request, flash
-from models import db, User, City, Attraction
+from models import db, User, Attraction
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 login_manager = LoginManager()
 from flask_bcrypt import Bcrypt
@@ -114,12 +114,38 @@ def register():
 
     return render_template("register.html", form=form)
 
+myAttractions = [];
+
+def getAttractionsFromDB():
+    attractions = db.session.execute(db.select(Attraction)).scalars()
+    
+    for attraction in attractions:
+
+        attraction = attraction.__dict__
+
+        slug = attraction["name"].replace(' ', '&')
+        attraction["slug"] = slug
+
+        myAttractions.append(attraction)
+
+
+with app.app_context():
+    getAttractionsFromDB()
+
+
+@app.route("/attractions")
+@login_required
+def viewAttractions():
+    
+
+    return render_template("attractions.html", attractions = myAttractions)
 
 
 @app.route("/protected")
 @login_required
 def myProtected():
     return "YOU HAVE ACCESS"
+
 
 @app.route("/logout")
 @login_required

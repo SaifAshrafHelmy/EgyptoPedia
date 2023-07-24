@@ -20,19 +20,10 @@ class Attraction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
-    city_id = db.Column(db.Integer, db.ForeignKey("cities.id"), nullable=False)
-    location_longitude = db.Column(db.REAL)
+    city = db.Column(db.String(80), nullable=False)
     location_latitude = db.Column(db.REAL)
+    location_longitude = db.Column(db.REAL)
     summary = db.Column(db.String(200))
     description = db.Column(db.String)
 
-    city = db.relationship("City", back_populates="attractions")
 
-
-class City(db.Model):
-    __tablename__ = "cities"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-
-    attractions = db.relationship("Attraction", back_populates="city")
