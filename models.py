@@ -27,3 +27,15 @@ class Attraction(db.Model):
     description = db.Column(db.String)
 
 
+class Trip_visit(db.Model):
+    __tablename__ = "trip_visits"
+
+    id = db.Column(db.Integer, primary_key=True)
+    visit_date = db.Column(db.Date)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    attraction_id = db.Column(db.Integer, db.ForeignKey("attractions.id"), nullable=False)
+
+
+
+

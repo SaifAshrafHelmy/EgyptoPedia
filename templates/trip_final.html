@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<link rel="stylesheet" href="/static/tl_style_v3.css">
+
+<div class="row my-5">
+  <div class="col-6 offset-3">
+    <h1>My Trip:</h1>
+  </div>
+</div>
+<div class="container">
+  
+  <div class="timeline">
+    <ul>
+      {% for trip_visit, attraction in data %}
+
+      <li>
+        <div class="timeline-content">
+          <h3 class="date">{{trip_visit.visit_date}}</h3>
+          <h1>{{attraction.name}}</h1>
+          <p>{{attraction.city}}</p>
+        </div>
+      </li>
+      {% endfor %}
+
+
+    </ul>
+  </div>
+</div>
+
+
+{% endblock %}

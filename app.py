@@ -1,5 +1,7 @@
+import datetime
+import os
 from flask import Flask, render_template, redirect, request, flash
-from models import db, User, Attraction
+from models import db, User, Attraction, Trip_visit
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 login_manager = LoginManager()
 from flask_bcrypt import Bcrypt
@@ -12,7 +14,7 @@ from forms import MyForm
 app = Flask(__name__)
 
 bcrypt = Bcrypt(app)
-csrf = CSRFProtect(app)
+# csrf = CSRFProtect(app)
 
 
 
@@ -136,9 +138,58 @@ with app.app_context():
 @app.route("/attractions")
 @login_required
 def viewAttractions():
-    
-
     return render_template("attractions.html", attractions = myAttractions)
+
+
+
+
+# def getTripsFromDB():
+#     myTrips = []
+#     trip_visits = db.session.execute(db.select(Trip_visit).filter(Trip_visit.user_id == current_user.id).order_by(Trip_visit.visit_date)).scalars()
+    
+#     for trip_visit in trip_visits:
+
+#         trip_visit = trip_visit.__dict__
+#         myTrips.append(trip_visit)
+
+#     return myTrips
+
+
+
+
+@app.route("/trip")
+@login_required
+def viewTrip():
+    # myTrips = getTripsFromDB()
+    data = db.session.query(Trip_visit, Attraction).join(Attraction).filter(Trip_visit.user_id == current_user.id).order_by(Trip_visit.visit_date.desc()).all()
+
+    return render_template("trip.html", data = data)
+
+
+@app.route("/mytrip")
+@login_required
+def tl():
+    data = db.session.query(Trip_visit, Attraction).join(Attraction).filter(Trip_visit.user_id == current_user.id).order_by(Trip_visit.visit_date.asc()).all()
+
+    return render_template("trip_final.html", data = data)
+
+
+@app.route("/addtotrip", methods=["POST"])
+@login_required
+def addToTrip():
+    attraction_id = request.form.get("attraction_id")
+    date = request.form.get("date")
+    datetime_obj = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    print(attraction_id)
+    print(datetime_obj)
+
+    trip_visit = Trip_visit(visit_date=datetime_obj, attraction_id=attraction_id, user_id =current_user.id )
+    db.session.add(trip_visit)
+    db.session.commit()
+
+
+    print("RECEIVED")
+    return  '', 204
 
 
 @app.route("/protected")
@@ -159,12 +210,11 @@ def logout():
 
 
 
-
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    # app.run(debug=True, host='0.0.0.0', port=port)
     app.run(debug=True)
 
 
 
-
-    
 
