@@ -1,7 +1,15 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %} Trip Timeline {% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/tl_style_v3.css">
+
+
+{% endblock %}
 
 {% block main %}
-<link rel="stylesheet" href="/static/tl_style_v3.css">
 
 <div class="row my-5">
   <div class="col-6 offset-3">

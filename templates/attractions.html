@@ -32,6 +32,10 @@
       background-color: #daec76; /* Red background for error messages */
       color: #721c24; /* Dark red text for error messages */
     }
+    .dateValidationMessage{
+      padding-top: 0.5rem;
+      color: red;
+    }
 
     /* Your other CSS styles here */
   </style>
@@ -70,13 +74,13 @@
               When do you want to visit <b>{{attraction.name}}</b> ?
               <input type="hidden" name="attraction_id" value="{{attraction.id}}">
               <div class="col-md-6">
-                <label for="validationCustom03" class="form-label">Date</label>
                 <input type="date" name="date" class="form-control form-control-lg mt-3" id="validationCustom03" required>
+                <div class="dateValidationMessage"></div>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" name="{{attraction.id}}" onclick="submitForm(name)" class="btn btn-success" data-bs-dismiss="modal">Add</button>
+              <button type="button" name="{{attraction.id}}" onclick="submitForm(name)" class="btn btn-success" >Add</button>
             </div>
           </div>
         </form>
@@ -90,7 +94,17 @@
     async function submitForm(id) {
       const formData = new FormData(document.getElementById(`myForm${id}`));
       let date = formData.get("date");
-      if (date) {
+
+      let modelElem = document.querySelector(`#modal${id}`);
+      dateValidationMessage = modelElem.querySelector('.dateValidationMessage')
+
+      if(!date)
+      {
+        dateValidationMessage.textContent= "Please enter the date you want to visit this attraction"
+
+      }
+      else{
+
         const apiUrl = "/addtotrip";
         try {
           await fetch(apiUrl, {
@@ -100,11 +114,23 @@
         } catch (error) {
           console.error("Error:", error);
         }
-      } else {
-        // Handle invalid form data here, if needed.
+        dateValidationMessage.textContent = ''
+        
+        let modalInstance = bootstrap.Modal.getInstance(modelElem);
+        modelElem.addEventListener('shown.bs.modal', function (){
+          modalInstance = bootstrap.Modal.getInstance(modelElem);
+        });
+        modalInstance.hide()
+        
       }
+
+
+
+
     }
   </script>
+  
+
   <script src="https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

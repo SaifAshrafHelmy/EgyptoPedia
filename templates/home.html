@@ -1,42 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Homepage</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-themes@^1.0.2/dist/backstay/index.min.css">
-  <style>
-    /* Your other CSS styles here */
 
-    /* Flash message styles */
-    .flash {
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-        font-size: 16px;
-        font-weight: bold;
-    }
 
-    .flash-success {
-        background-color: #d4edda;  /* Green background for success messages */
-        color: #155724;  /* Dark green text for success messages */
-    }
+{% extends "base.html" %}
 
-    .flash-error {
-        background-color: #f8d7da;  /* Red background for error messages */
-        color: #721c24;  /* Dark red text for error messages */
-    }
-    .flash-warning {
-        background-color: #daec76;  /* Red background for error messages */
-        color: #721c24;  /* Dark red text for error messages */
-    }
+{% block title %} Homepage {% endblock %}
 
-    /* Your other CSS styles here */
-</style>
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/home_styles.css">
 
-</head>
+{% endblock %}
 
-<body class="container">
+
+
+
+{% block main %}
+
   <nav class="navbar navbar-expand-sm navbar-light bg-primary mb-3">
     <a class="navbar-brand" href="#">
       Brand
@@ -109,6 +87,7 @@
     <p style="margin-top: 30%; margin-left: 90%;">you're logged in as <b><i>{{current_user.username}}</i></b></p>
     {% endif %}
 
-  <script src="https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
-</html>
+
+
+
+    {% endblock %}
