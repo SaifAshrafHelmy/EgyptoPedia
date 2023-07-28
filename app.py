@@ -143,29 +143,6 @@ def viewAttractions():
 
 
 
-# def getTripsFromDB():
-#     myTrips = []
-#     trip_visits = db.session.execute(db.select(Trip_visit).filter(Trip_visit.user_id == current_user.id).order_by(Trip_visit.visit_date)).scalars()
-    
-#     for trip_visit in trip_visits:
-
-#         trip_visit = trip_visit.__dict__
-#         myTrips.append(trip_visit)
-
-#     return myTrips
-
-
-
-
-@app.route("/trip")
-@login_required
-def viewTrip():
-    # myTrips = getTripsFromDB()
-    data = db.session.query(Trip_visit, Attraction).join(Attraction).filter(Trip_visit.user_id == current_user.id).order_by(Trip_visit.visit_date.desc()).all()
-
-    return render_template("trip.html", data = data)
-
-
 @app.route("/mytrip")
 @login_required
 def tl():

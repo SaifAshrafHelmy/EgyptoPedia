@@ -1,48 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attractions</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-themes@^1.0.2/dist/backstay/index.min.css" rel="stylesheet">
+{% extends "base.html" %}
 
-  <style>
-    /* Your other CSS styles here */
+{% block title %} Attractions {% endblock %}
 
-    /* Flash message styles */
-    .flash {
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: bold;
-    }
 
-    .flash-success {
-      background-color: #d4edda; /* Green background for success messages */
-      color: #155724; /* Dark green text for success messages */
-    }
+{% block main %}
 
-    .flash-error {
-      background-color: #f8d7da; /* Red background for error messages */
-      color: #721c24; /* Dark red text for error messages */
-    }
-
-    .flash-warning {
-      background-color: #daec76; /* Red background for error messages */
-      color: #721c24; /* Dark red text for error messages */
-    }
-    .dateValidationMessage{
-      padding-top: 0.5rem;
-      color: red;
-    }
-
-    /* Your other CSS styles here */
-  </style>
-
-</head>
-<body class="container">
-  <div class="row">
+<div class="container">
+  
+  <div class="row mt-4">
     <h1>Attractions:</h1>
   </div>
 
@@ -90,6 +55,13 @@
     {% endfor %}
   </div>
 
+
+
+</div>
+
+
+
+
   <script>
     async function submitForm(id) {
       const formData = new FormData(document.getElementById(`myForm${id}`));
@@ -131,6 +103,5 @@
   </script>
   
 
-  <script src="https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
-</html>
+
+  {% endblock %}

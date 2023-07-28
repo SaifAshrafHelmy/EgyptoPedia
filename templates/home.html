@@ -15,77 +15,24 @@
 
 {% block main %}
 
-  <nav class="navbar navbar-expand-sm navbar-light bg-primary mb-3">
-    <a class="navbar-brand" href="#">
-      Brand
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-0" aria-controls="navbar-0" aria-expanded="false" aria-label="Toggle Navigation">
-      <span class="navbar-toggler-icon">
-      </span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbar-0">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">
-          Home
-          <span class="sr-only">
-            (current)
-          </span>
-        </a>
-        <a class="nav-item nav-link" href="#">
-          Documentation
-        </a>
-        <a class="nav-item nav-link" href="#">
-          Examples
-        </a>
-        <a class="nav-item nav-link" href="#">
-          Blog
-        </a>
-      </div>
-      <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link" href="#">
-          Contact Us
-        </a>
-      </div>
+  <div class="container">
+
+
+    <div class="row mt-4">
+      <h1>Home:</h1>
     </div>
-  </nav>
-
-
   <div class="row">
     <div class="col-6 offset-3 mx-5 my-5">
-      <h1>Hello to the Homepage!</h1>
-      <h2><a href="/attractions">Go To Attractions</a></h2>
-      <h2><a href="/mytrip">Go To Your Trip</a></h2>
+      <h4>this is the content of the homepage</h4>
 
-      {%     if current_user.is_authenticated     %}
-      <a class="btn btn-danger" href="/logout">Logout</a>
-      {% else %}
-      <a class="btn btn-success" href="/login">Login</a>
-      <a class="btn btn-success" href="/register">Register</a>
-      {% endif %}
     </div>
+
+
   </div>
   
 
 
-  
-
-
-
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-            <ul class="flashes">
-              {% for category, message in messages %}
-              <div class="flash flash-{{ category }}">
-                  {{ message }}
-              </div>
-              {% endfor %}
-
-            </ul>
-        {% endif %}
-    {% endwith %}
-    {%     if current_user.is_authenticated     %}
-    <p style="margin-top: 30%; margin-left: 90%;">you're logged in as <b><i>{{current_user.username}}</i></b></p>
-    {% endif %}
+</div>
 
 
 

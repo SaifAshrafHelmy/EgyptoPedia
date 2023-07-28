@@ -6,13 +6,50 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %} - My Webpage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-themes@^1.0.2/dist/backstay/index.min.css"  rel="stylesheet" >
+    <link rel="stylesheet" href="/static/main.css">
+
     {% endblock %}
 
 
 </head>
-<body class="container">
-{% block main %}
 
+
+
+<body >
+
+
+<!-- navbar -->
+
+<nav class="navbar navbar-expand-sm navbar-light bg-primary mb-3" id="myCustomNavbar">
+    <a class="navbar-brand ml-5 my-2" href="#">
+        EgyptoPedia
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-0" aria-controls="navbar-0" aria-expanded="false" aria-label="Toggle Navigation">
+        <span class="navbar-toggler-icon">
+        </span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-0">
+        <div class="navbar-nav">
+        <a class="nav-item nav-link active mx-2" href="/">Home</a>
+        <a class="nav-item nav-link mx-2" href="/attractions">Attractions</a>
+        <a class="nav-item nav-link mx-2" href="/mytrip">My Trip</a>
+        </div>
+
+
+
+        <div class="navbar-nav ml-auto">
+            {%     if current_user.is_authenticated     %}
+            <a class="btn btn-success mx-1" href="/logout">Logout</a>
+            {% else %}
+            <a class="btn btn-success mx-1" href="/register">Register</a>
+            <a class="btn btn-success mx-1" href="/login">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+
+{% block main %}
 {% endblock %}
 
 
