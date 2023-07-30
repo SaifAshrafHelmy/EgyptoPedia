@@ -45,7 +45,7 @@ def load_user(user_id):
 
 @app.route("/")
 def hello_world():
-    return render_template("home.html")
+    return redirect('/attractions')
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -169,10 +169,14 @@ def addToTrip():
     return  '', 204
 
 
-@app.route("/protected")
+@app.route("/removefromtrip", methods=["POST"])
 @login_required
-def myProtected():
-    return "YOU HAVE ACCESS"
+def removeFromTrip():
+    trip_visit_id = request.form.get("trip_visit_id")
+    db.session.query(Trip_visit).filter(Trip_visit.id == trip_visit_id ).delete()
+    db.session.commit()
+
+    return redirect('/mytrip')
 
 
 @app.route("/logout")

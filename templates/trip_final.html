@@ -20,6 +20,13 @@
 
 
 <div class="container-tl">
+  {% if not data %}
+  <div class="no-data-warning">
+    <p >You haven't added any destinations to your trip yet,</p>
+    <p > Please add them from the <a href="/attractions">attractions</a> page.</p>
+
+  </div>
+  {% else %}
   
   <div class="timeline">
     <ul>
@@ -30,13 +37,23 @@
           <h3 class="date">{{trip_visit.visit_date}}</h3>
           <h1>{{attraction.name}}</h1>
           <p>{{attraction.city}}</p>
-        </div>
+          <div class="d-flex justify-content-center"> 
+            <form action="/removefromtrip" method="post">
+              <input type="hidden" name="trip_visit_id" value="{{trip_visit.id}}">
+              <button type="submit" class="btn btn-danger removeButton">Remove</button>
+            </form>
+          </div>
+      </div>
       </li>
       {% endfor %}
 
 
     </ul>
   </div>
+
+
+  {% endif %}
+
 </div>
 
 </div>

@@ -10,17 +10,16 @@
   <div class="row mt-4">
     <h1>Attractions:</h1>
   </div>
-
   <div class="row">
     {% for attraction in attractions %}
 
-    <div class="card mx-3 my-3" style="width: 18rem;">
+    <div class="card mx-3 my-3 px-0" style="width: 18rem;">
       <img src="https://source.unsplash.com/random/400x300/?{{attraction.slug}}" onerror="this.onerror = null; this.src='/static/default.jpg'" class="card-img-top" alt="...">
       <div class="card-body d-flex flex-column">
         <h5 class="card-title">{{attraction.name}}</h5>
         <p class="card-text">{{attraction.summary}}</p>
-        <a href="#" class="btn btn-primary mt-auto">View</a>
-        <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#modal{{attraction.id}}">
+        <a href="#" class="btn btn-primary mt-auto viewButton">View</a>
+        <button type="button" class="btn btn-primary mt-2 addButton" data-bs-toggle="modal" data-bs-target="#modal{{attraction.id}}">
           Add to my trip
         </button>
       </div>

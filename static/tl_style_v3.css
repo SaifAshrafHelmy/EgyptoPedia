@@ -28,7 +28,7 @@
 
 .timeline ul li {
   padding: 20px;
-  background-color: #006666;
+  background-color: #21606F;
   color: white;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -61,6 +61,21 @@
   letter-spacing: 2px;
 }
 
+
+.no-data-warning{
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn.btn-danger.removeButton {
+  background-color: #074148  !important;
+  border-color: #006666;
+  color: white;
+}
+
 @media only screen and (min-width: 768px) {
   .timeline:before {
     content: "";
@@ -70,7 +85,7 @@
     transform: translateX(-50%);
     width: 2px;
     height: 100%;
-    background-color: gray;
+    background-color: #415a77;
   }
 
   .timeline ul li {
@@ -89,7 +104,7 @@
   .timeline ul li:nth-child(even) {
     float: right;
     clear: left;
-    transform: translateX(30px);
+    transform: translateX(0px);
     border-radius: 0px 20px 20px 20px;
   }
 
@@ -99,18 +114,18 @@
     height: 20px;
     width: 20px;
     border-radius: 50%;
-    background-color: gray;
+    background-color: #415a77 ;
     top: 0px;
   }
 
   .timeline ul li:nth-child(odd)::before {
     transform: translate(50%, -50%);
-    right: -30px;
+    right: -15px;
   }
 
   .timeline ul li:nth-child(even)::before {
     transform: translate(-50%, -50%);
-    left: -30px;
+    left: -16px;
   }
 
   .timeline-content .date {
@@ -122,6 +137,9 @@
   }
 
   .timeline ul li:hover::before {
-    background-color: aqua;
+    background-color: #2a415b ;
   }
 }
+
+
+
