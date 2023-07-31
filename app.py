@@ -1,4 +1,5 @@
 import datetime
+import html
 import os
 from flask import Flask, render_template, redirect, request, flash
 from models import db, User, Attraction, Trip_visit
@@ -7,6 +8,7 @@ login_manager = LoginManager()
 from flask_bcrypt import Bcrypt
 from flask_wtf.csrf import CSRFProtect
 from forms import MyForm
+from sqlalchemy import func
 
 
 
@@ -45,7 +47,7 @@ def load_user(user_id):
 
 @app.route("/")
 def hello_world():
-    return redirect('/attractions')
+    return render_template("home.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -131,15 +133,100 @@ def getAttractionsFromDB():
         myAttractions.append(attraction)
 
 
+uniqueCities = [];
+def getUniqueCitiesFromDB():
+    # cities = db.session.query(Attraction.city).distinct().order_by(Attraction.city.asc()).all()
+    # for city in cities:
+    #     uniqueCities.append(city[0])
+    global uniqueCities
+    subquery = db.session.query(Attraction.city, func.count(Attraction.id).label('attraction_count')) \
+            .group_by(Attraction.city) \
+            .subquery()
+
+    cities_with_attractions_count = db.session.query(subquery.c.city, subquery.c.attraction_count) \
+                            .order_by(subquery.c.attraction_count.desc()) \
+                            .all()
+
+    # Extract the city names and the attraction counts as a list of dictionaries
+    uniqueCities = [ {'city': city, 'attraction_count': attraction_count} for city, attraction_count in cities_with_attractions_count]
+
+
+
+
+
+
 with app.app_context():
     getAttractionsFromDB()
+    getUniqueCitiesFromDB()
+    print(uniqueCities)
 
 
-@app.route("/attractions")
+
+@app.route("/attractions", methods=["GET", "POST"])
 @login_required
 def viewAttractions():
-    return render_template("attractions.html", attractions = myAttractions)
+    if request.method == "GET":
+        return render_template("attractions.html", attractions = myAttractions, uniqueCities=uniqueCities)
+    else:
+        attraction_name = request.form.get("attraction_name")
+        escaped_attraction_name = html.escape(attraction_name)
+        search_term = "%{}%".format(escaped_attraction_name)
+        results = db.session.query(Attraction).filter(Attraction.name.like(search_term)).all()
 
+        searchedAttractions = [];
+
+        for attraction in results:
+            attraction = attraction.__dict__
+
+            slug = attraction["name"].replace(' ', '&')
+            attraction["slug"] = slug
+            searchedAttractions.append(attraction)
+
+
+        print(escaped_attraction_name)
+        return render_template("attractions.html", attractions = searchedAttractions, searchTerm = escaped_attraction_name, uniqueCities=uniqueCities )
+
+
+
+@app.route("/attractions/bycity/<city>", methods=["GET"])
+@login_required
+def viewAttractionsInCity(city):
+    escaped_attraction_city = html.escape(city)
+    filter_city = "%{}%".format(escaped_attraction_city)
+    results = db.session.query(Attraction).filter(Attraction.city.like(filter_city)).all()
+
+    searchedAttractions = [];
+
+    for attraction in results:
+        attraction = attraction.__dict__
+
+        slug = attraction["name"].replace(' ', '&')
+        attraction["slug"] = slug
+        searchedAttractions.append(attraction)
+
+
+    return render_template("attractions.html", attractions = searchedAttractions, filterCity = escaped_attraction_city, uniqueCities=uniqueCities)
+
+
+# @app.route("/attractions/city", methods=["GET", "POST"])
+# @login_required
+# def viewAttractionsInCity():
+#     attraction_city = request.args.get("attraction_city")
+#     escaped_attraction_city = html.escape(attraction_city)
+#     filter_city = "%{}%".format(escaped_attraction_city)
+#     results = db.session.query(Attraction).filter(Attraction.city.like(filter_city)).all()
+
+#     searchedAttractions = [];
+
+#     for attraction in results:
+#         attraction = attraction.__dict__
+
+#         slug = attraction["name"].replace(' ', '&')
+#         attraction["slug"] = slug
+#         searchedAttractions.append(attraction)
+
+
+#     return render_template("attractions.html", attractions = searchedAttractions, filterCity = escaped_attraction_city, uniqueCities=uniqueCities)
 
 
 

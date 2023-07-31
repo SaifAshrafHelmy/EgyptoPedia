@@ -111,3 +111,42 @@ body div a:hover {
 .addButton:hover, .viewButton:hover{
   color:#0d1b2a;
 }
+
+.searchForm{
+  justify-content: flex-start;
+  margin-block: 20px;
+}
+
+.searchForm #searchInput:focus{
+  box-shadow: none;
+
+}
+
+/* .filterForm{
+  justify-content: flex-end;
+  margin-block: 20px;
+}
+
+.filterForm #searchInput:focus{
+  box-shadow: none;
+
+} */
+
+/* .dropdown .btn{
+  background-color: #415a77 !important ;
+
+} */
+
+.filterDropDown{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.filterDropDown button{
+  padding: 10px;
+}
+
+.dropdown-item.active{
+  background-color: #415a77;
+}

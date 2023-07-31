@@ -1,50 +1,96 @@
-{% extends "base.html" %}
-
-{% block title %} Attractions {% endblock %}
-
-
-{% block main %}
+{% extends "base.html" %} {% block title %} Attractions {% endblock %} {% block
+main %}
 
 <div class="container">
-  
   <div class="row mt-4">
     <h1>Attractions:</h1>
   </div>
+  <div class="row align-items-center">
+    
+    <form action="/attractions" method="post" class="col-md-6">
+      <div class="input-group me-5 searchForm">
+        
+        <div class="form-outline">
+          <input type="search" name="attraction_name" id="searchInput" placeholder="Search all destinations"
+            class="form-control form-control-lg rounded-end-0" />
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
+
+
+    <div class="dropdown filterDropDown col-md-6">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Filter by city
+      </button>
+      <ul class="dropdown-menu">
+        {% for cityData in uniqueCities %}
+        <li><a class="dropdown-item {% if filterCity == cityData.city %} active {% endif%}" href="/attractions/bycity/{{cityData.city}}">{{cityData.city|capitalize}} &nbsp; ({{cityData.attraction_count}})</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+
+
+   
+  </div>
+
+
+  <div class="row">
+    {% if (filterCity) %}
+    <p>filtering for destinations in <b>{{filterCity|capitalize}}</b> city</p>
+    {% elif (searchTerm)%}
+    <p>You searched for:  <b>{{searchTerm|capitalize}}</b> </p>
+    {% endif %}
+
+
+  </div>
+
   <div class="row">
     {% for attraction in attractions %}
 
-    <div class="card mx-3 my-3 px-0" style="width: 18rem;">
-      <img src="https://source.unsplash.com/random/400x300/?{{attraction.slug}}" onerror="this.onerror = null; this.src='/static/default.jpg'" class="card-img-top" alt="...">
+    <div class="card mx-3 my-3 px-0" style="width: 18rem">
+      <img src="https://source.unsplash.com/random/400x300/?{{attraction.slug}}"
+        onerror="this.onerror = null; this.src='/static/default.jpg'" class="card-img-top" alt="..." />
       <div class="card-body d-flex flex-column">
         <h5 class="card-title">{{attraction.name}}</h5>
         <p class="card-text">{{attraction.summary}}</p>
         <a href="#" class="btn btn-primary mt-auto viewButton">View</a>
-        <button type="button" class="btn btn-primary mt-2 addButton" data-bs-toggle="modal" data-bs-target="#modal{{attraction.id}}">
+        <button type="button" class="btn btn-primary mt-2 addButton" data-bs-toggle="modal"
+          data-bs-target="#modal{{attraction.id}}">
           Add to my trip
         </button>
       </div>
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="modal{{attraction.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal{{attraction.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog">
         <form action="/addtotrip" method="POST" id="myForm{{attraction.id}}" class="needs-validation" novalidate>
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Add to my trip</h1>
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Add to my trip
+              </h1>
               <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
               When do you want to visit <b>{{attraction.name}}</b> ?
-              <input type="hidden" name="attraction_id" value="{{attraction.id}}">
+              <input type="hidden" name="attraction_id" value="{{attraction.id}}" />
               <div class="col-md-6">
-                <input type="date" name="date" class="form-control form-control-lg mt-3" id="validationCustom03" required>
+                <input type="date" name="date" class="form-control form-control-lg mt-3" id="validationCustom03"
+                  required />
                 <div class="dateValidationMessage"></div>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" name="{{attraction.id}}" onclick="submitForm(name)" class="btn btn-success" >Add</button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button type="button" name="{{attraction.id}}" onclick="submitForm(name)" class="btn btn-success">
+                Add
+              </button>
             </div>
           </div>
         </form>
@@ -55,52 +101,52 @@
   </div>
 
 
-
+  <!-- PAGINATION -- to be completed later -->
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+      <li class="page-item disabled">
+        <a class="page-link">Previous</a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>
 
+<script>
+  async function submitForm(id) {
+    const formData = new FormData(document.getElementById(`myForm${id}`));
+    let date = formData.get("date");
 
+    let modelElem = document.querySelector(`#modal${id}`);
+    dateValidationMessage = modelElem.querySelector(".dateValidationMessage");
 
-
-  <script>
-    async function submitForm(id) {
-      const formData = new FormData(document.getElementById(`myForm${id}`));
-      let date = formData.get("date");
-
-      let modelElem = document.querySelector(`#modal${id}`);
-      dateValidationMessage = modelElem.querySelector('.dateValidationMessage')
-
-      if(!date)
-      {
-        dateValidationMessage.textContent= "Please enter the date you want to visit this attraction"
-
-      }
-      else{
-
-        const apiUrl = "/addtotrip";
-        try {
-          await fetch(apiUrl, {
-            method: "POST",
-            body: formData,
-          });
-        } catch (error) {
-          console.error("Error:", error);
-        }
-        dateValidationMessage.textContent = ''
-        
-        let modalInstance = bootstrap.Modal.getInstance(modelElem);
-        modelElem.addEventListener('shown.bs.modal', function (){
-          modalInstance = bootstrap.Modal.getInstance(modelElem);
+    if (!date) {
+      dateValidationMessage.textContent =
+        "Please enter the date you want to visit this attraction";
+    } else {
+      const apiUrl = "/addtotrip";
+      try {
+        await fetch(apiUrl, {
+          method: "POST",
+          body: formData,
         });
-        modalInstance.hide()
-        
+      } catch (error) {
+        console.error("Error:", error);
       }
+      dateValidationMessage.textContent = "";
 
-
-
-
+      let modalInstance = bootstrap.Modal.getInstance(modelElem);
+      modelElem.addEventListener("shown.bs.modal", function () {
+        modalInstance = bootstrap.Modal.getInstance(modelElem);
+      });
+      modalInstance.hide();
     }
-  </script>
-  
+  }
+</script>
 
-
-  {% endblock %}
+{% endblock %}
