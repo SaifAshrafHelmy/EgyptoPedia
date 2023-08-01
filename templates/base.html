@@ -4,6 +4,8 @@
     {% block head %}
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}{% endblock %} - My Webpage</title>
     <link href="/static/bootstrap/bootstrap.min.css"  rel="stylesheet" >
     <link rel="stylesheet" href="/static/main.css">
@@ -22,35 +24,46 @@
 
 
 <!-- navbar -->
-
-<nav class="navbar navbar-expand-sm navbar-light bg-primary mb-3" id="myCustomNavbar">
-    <a class="navbar-brand ms-5 me-4 my-2" href="#">
-        EgyptoPedia
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-0" aria-controls="navbar-0" aria-expanded="false" aria-label="Toggle Navigation">
-        <span class="navbar-toggler-icon">
-        </span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbar-0">
-        <div class="navbar-nav">
-        <!-- <a class="nav-item nav-link  mx-2" href="/">Home</a> -->
-        <a class="nav-item nav-link mx-2" href="/">Home</a>
-        <a class="nav-item nav-link mx-2" href="/attractions">Attractions</a>
-        <a class="nav-item nav-link mx-2" href="/mytrip">My Trip</a>
-        </div>
-
-
+<nav class="navbar navbar-expand-lg bg-light bg-primary mb-3"  id="myCustomNavbar">
+    <div class="container-fluid">
+        <a class="navbar-brand  ms-sm-0 ms-lg-5  me-4 my-2" href="/">
+            EgyptoPedia
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link mx-2" href="/">Home</a>
+          </li>
+  
+          <li class="nav-item">
+            <a class="nav-link mx-2" href="/attractions">Attractions</a>
+          </li>
+  
+          <li class="nav-item">
+            <a class="nav-link mx-2" href="/mytrip">My Trip</a>
+          </li>
+        </ul>
 
         <div class="navbar-nav ms-auto me-3">
-            {%     if current_user.is_authenticated     %}
-            <a class="btn btn-success mx-1" href="/logout">Logout</a>
+            {% if current_user.is_authenticated %}
+            <a class="btn btn-success mx-1 my-sm-2 my-lg-0 logButtons"  href="/logout">Logout</a>
             {% else %}
-            <a class="btn btn-success mx-1" href="/register">Register</a>
-            <a class="btn btn-success mx-1" href="/login">Login</a>
+            <a class="btn btn-success mx-2 my-2 my-lg-0 logButtons"  href="/login">Login</a>
+            <a class="btn btn-success mx-2 my-2 my-lg-0 logButtons"  href="/register">Register</a>
             {% endif %}
-        </div>
+          </div>
+  
+        
+  
+      </div>
     </div>
-</nav>
+  </nav>
+  
+  
 
 
 {% block main %}
@@ -58,7 +71,9 @@
 
 
 
-{% with messages = get_flashed_messages(with_categories=true) %}
+<div class="row gx-0 gy-0 flashErrors">
+    <div class="col-3 offset-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <ul class="flashes">
         {% for category, message in messages %}
@@ -70,6 +85,8 @@
         </ul>
     {% endif %}
 {% endwith %}
+    </div>
+</div>
 
 
 {%     if current_user.is_authenticated     %}
@@ -83,7 +100,42 @@
 
 
 
-
 <script src="/static/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- <script>
+    /* Simple script to hide flash messages */
+    flashMessage = document.querySelector('.flashErrors')
+    if(flashMessage)
+    {
+        window.setTimeout(()=> {
+         flashMessage.style.display="none"   
+        },3000)
+
+    } -->
+</script>
+<script>
+    /* fading script */
+    var element = document.querySelector('.flashErrors'); 
+    function fadeOut(el) {
+       var opacity = 1; // Initial opacity
+       var interval = setInterval(function() {
+          if (opacity > 0) {
+             opacity -= 0.02;
+             el.style.opacity = opacity;
+          } else {
+             clearInterval(interval); // Stop the interval when opacity reaches 0
+             el.style.display = 'none'; // Hide the element
+          }
+       }, 50);
+    }
+    if(element.querySelector('.flashes'))
+    {
+        window.setTimeout(()=>{
+        fadeOut(element);
+    }, 2000)
+    }
+ </script> 
+
+
 </body>
 </html>

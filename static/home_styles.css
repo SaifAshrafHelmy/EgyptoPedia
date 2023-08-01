@@ -22,3 +22,28 @@ ul{
   line-height: 1.4;
 
 }
+.flashErrors{
+  top: 90% !important;
+}
+
+
+.theHome{
+  height: 100%;
+}
+
+@media only screen and (max-width: 768px) {
+
+ body{
+  background-position:center !important;
+
+ }
+
+}
+
+
+@media (max-width:400px) {
+  .introduction .mainWelcome{font-size: 34px;}
+  .introduction .secondWelcome{font-size: 22px;}
+  .introduction .feature{font-size: 14px;}
+}
+

@@ -25,6 +25,10 @@ login_manager.init_app(app)
 app.secret_key = b'_5#@@y2L"F5Q8d\n\xec]/'
 
 
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
+
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///egy.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -49,6 +53,11 @@ def load_user(user_id):
 def hello_world():
     return render_template("home.html")
 
+@app.route('/newhome')
+def new_home():
+    return render_template('res_home.html')
+
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -64,6 +73,8 @@ def login():
         if form.validate_on_submit():
             username = request.form.get("username")
             password = request.form.get("password")
+            next = request.form.get("next")
+
 
             try:
                 user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one()
@@ -75,7 +86,8 @@ def login():
                     M_User = load_user(user.id)
                     login_user(M_User, remember=True);
                     flash('Logged in successfully.', 'success')
-                    return redirect("/")
+                    print(f"next is {next}")
+                    return redirect(next or '/')
                 else:
                     flash("Wrong password, try again.", 'error')
                     
@@ -83,7 +95,7 @@ def login():
                 flash("Username doesn't exit", 'error')
 
 
-    return render_template("login.html", form=form)
+    return render_template("login_page.html", form=form)
 
 
         
@@ -103,6 +115,11 @@ def register():
         if form.validate_on_submit():
 
             username = request.form.get("username")
+            usernameAlreadyExists = db.session.query(User).filter(User.username == username).all()
+            if(usernameAlreadyExists):
+                flash('Username already exists.', 'warning')
+                return redirect('/register')
+
             raw_password = request.form.get("password")
             pw_hash = bcrypt.generate_password_hash(raw_password)
 
@@ -116,7 +133,10 @@ def register():
             return redirect("/")
 
 
-    return render_template("register.html", form=form)
+    return render_template("register_page.html", form=form)
+
+
+
 
 myAttractions = [];
 

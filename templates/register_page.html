@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href>
+
+{% endblock %}
+
+{% block main %}
+<div class="container ">
+  <h2 class="text-center display-6 mt-5">Create a new account  </h2>
+
+
+  <div class="row">
+    <div class="col col-lg-4 offset-lg-4 mt-5">
+      <form action="/register" method="POST">
+        {{ form.csrf_token }}
+
+        <div class="mb-3">
+          <label for="{{ form.username.id }}" class="form-label">Username</label>
+          <input type="text" class="form-control" id="{{ form.username.id }}" name="{{ form.username.name }}" autofocus>
+          {% if form.username.errors %}
+          {% for error in form.username.errors %}
+          <div class="flash flash-error">
+            {{ error }}
+          </div>
+
+          {% endfor %}
+          {% endif %}
+        </div>
+
+
+        <div class="mb-3">
+          <label for="{{ form.password.id }}" class="form-label">Password</label>
+          <input type="password" class="form-control" id="{{ form.password.id }}" name="{{ form.password.name }}">
+
+          {% if form.password.errors %}
+          {% for error in form.password.errors %}
+          <div class="flash flash-error">
+            {{ error }}
+          </div>
+
+          {% endfor %}
+          {% endif %}
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Register</button>
+
+      </form>
+
+      <div class="my-4">
+        <span class="txt1">
+          Already have an account?
+        </span>
+
+        <a class="txt2" href="/login">
+          Login
+        </a>
+      </div>
+
+
+    </div>
+  </div>
+
+
+
+
+
+</div>
+{% endblock %}

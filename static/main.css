@@ -16,13 +16,39 @@
     font-style: italic;
 
 }
+.navbar-brand:hover{
+  color: white !important;
+  scale: 1.05;
 
-.navbar-nav .nav-item {
+
+}
+
+.navbar-nav .nav-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navbar-nav .nav-item .nav-link {
   color: white !important;
 }
 
-.navbar-nav .nav-item.active {
+.navbar-nav .nav-item .nav-link.active {
   font-weight: 700;
+}
+
+.navbar-toggler{
+  background: #415a77 ;
+  border: none;
+}
+.navbar-toggler:hover, 
+.navbar-toggler:focus, 
+.navbar-toggler:active{
+  background: #415a77 ;
+  border: none;
+  outline: none;
+  box-shadow: none;
+
+
 }
 
 body {
@@ -50,6 +76,8 @@ body {
     color: white;
   }
   
+
+
 
 .btn.btn-danger.removeButton:hover {
   background-color: #db2243 !important;
@@ -179,4 +207,29 @@ body div a:hover {
 }
 .innerDiv p{
   margin: 0;
+}
+
+.flashErrors{
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-90%, -50%);
+}
+.flashErrors div{
+  width: max-content;
+}
+
+
+
+
+@media (max-width:400px) {
+  .logButtons{
+    color: black !important;
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  .logButtons:hover{
+    color: white !important;
+  }
 }
