@@ -34,6 +34,7 @@
     <div class="collapse navbar-collapse" id="navbar-0">
         <div class="navbar-nav">
         <!-- <a class="nav-item nav-link  mx-2" href="/">Home</a> -->
+        <a class="nav-item nav-link mx-2" href="/">Home</a>
         <a class="nav-item nav-link mx-2" href="/attractions">Attractions</a>
         <a class="nav-item nav-link mx-2" href="/mytrip">My Trip</a>
         </div>
@@ -72,7 +73,12 @@
 
 
 {%     if current_user.is_authenticated     %}
-<p style="margin-top: 30%; margin-left: 90%;">you're logged in as <b><i>{{current_user.username}}</i></b></p>
+<div class="loggedInContainer">
+    <div class="innerDiv">
+        <p class="loggedIn">You're logged in as </p>
+        <p><b><i>{{current_user.username}}</i></b></p>
+    </div>
+</div>
 {% endif %}
 
 

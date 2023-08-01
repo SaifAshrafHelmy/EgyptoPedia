@@ -158,7 +158,6 @@ def getUniqueCitiesFromDB():
 with app.app_context():
     getAttractionsFromDB()
     getUniqueCitiesFromDB()
-    print(uniqueCities)
 
 
 
@@ -183,7 +182,6 @@ def viewAttractions():
             searchedAttractions.append(attraction)
 
 
-        print(escaped_attraction_name)
         return render_template("attractions.html", attractions = searchedAttractions, searchTerm = escaped_attraction_name, uniqueCities=uniqueCities )
 
 
