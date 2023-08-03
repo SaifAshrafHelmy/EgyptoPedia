@@ -9,6 +9,7 @@ from flask_bcrypt import Bcrypt
 from flask_wtf.csrf import CSRFProtect
 from forms import MyForm
 from sqlalchemy import func
+from dotenv import load_dotenv
 
 
 
@@ -20,9 +21,19 @@ bcrypt = Bcrypt(app)
 
 
 
+
+load_dotenv()
+my_secret_key = os.getenv("my_secret_key")
+
+if( my_secret_key == None ):
+    my_secret_key = b'_5#@@y2L"F5Q8d\n\xec]/'
+
+
+
+
 # initialize the login manager
 login_manager.init_app(app)
-app.secret_key = b'_5#@@y2L"F5Q8d\n\xec]/'
+app.secret_key = my_secret_key
 
 
 login_manager = LoginManager(app)
