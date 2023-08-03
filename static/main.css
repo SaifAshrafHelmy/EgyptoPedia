@@ -219,10 +219,12 @@ body div a:hover {
   width: max-content;
 }
 
+.cardsContainer{
+  justify-content: flex-start;
+}
 
 
-
-@media (max-width:400px) {
+@media (max-width:750px) {
   .logButtons{
     color: black !important;
     border: none;
@@ -231,5 +233,12 @@ body div a:hover {
   }
   .logButtons:hover{
     color: white !important;
+  }
+  .cardsContainer{
+    justify-content: center !important;
+  }
+
+  .filterDropDown{
+    justify-content: center;
   }
 }

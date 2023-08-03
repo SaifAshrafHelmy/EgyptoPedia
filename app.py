@@ -53,9 +53,6 @@ def load_user(user_id):
 def hello_world():
     return render_template("home.html")
 
-@app.route('/newhome')
-def new_home():
-    return render_template('res_home.html')
 
 
 
@@ -224,6 +221,17 @@ def viewAttractionsInCity(city):
 
 
     return render_template("attractions.html", attractions = searchedAttractions, filterCity = escaped_attraction_city, uniqueCities=uniqueCities)
+
+
+@app.route('/attractions/view/<attraction_id>')
+def view_page(attraction_id):
+    # found_attraction = db.session.query(Attraction).filter(Attraction.id == attraction_id).one()
+    # better for primary key lookup:
+    attraction = db.session.query(Attraction).get(attraction_id)
+    slug = attraction.name.replace(' ', '&')
+    attraction.slug = slug
+    print(attraction.name)
+    return render_template('view_page.html', attraction=attraction)
 
 
 # @app.route("/attractions/city", methods=["GET", "POST"])

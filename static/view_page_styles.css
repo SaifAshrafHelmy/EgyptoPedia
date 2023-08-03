@@ -1,0 +1,26 @@
+.mainHeader h1{
+  font-weight: 700;
+}
+.summary{
+  color: grey;
+  font-style: italic;
+  line-height: 0.5;
+}
+
+.about{
+  font-size: 32px;
+}
+
+.city span{
+  font-style: italic;
+}
+
+@media (max-width:750px) {
+  .viewPageButtons{
+    justify-content: center;
+  }
+  .addButtonDiv{
+    padding-inline: 12px !important;
+    margin-top: 8px;
+  }
+}

@@ -41,7 +41,7 @@ ul{
 }
 
 
-@media (max-width:400px) {
+@media (max-width:750px) {
   .introduction .mainWelcome{font-size: 34px;}
   .introduction .secondWelcome{font-size: 22px;}
   .introduction .feature{font-size: 14px;}

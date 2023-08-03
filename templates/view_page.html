@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %} {{attraction.name}} {% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="/static/view_page_styles.css">
+
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-12  mt-4 mainHeader">
+      <h1 class="">{{attraction.name}}</h1>
+    </div>
+  </div>
+  <div class="row my-0">
+    <div class="col-12 ms-0  mt-3 mb-4">
+      <h1 class="lead summary">{{attraction.summary}}</h1>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="card  my-3 px-0 col-lg-4 col-sm-8 ">
+
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mt-1 about">About</h5>
+
+        <p class="card-text my-0 mt-2 lead  city"> City: <span>{{attraction.city}}</span></p>
+
+
+
+        <p class="card-text my-3 lead ">{{attraction.description}}</p>
+      </div>
+
+    </div>
+
+    <div class="card  my-3 px-0 mx-2" style="width: 40rem;">
+      <img src="https://source.unsplash.com/random/500x300/?{{attraction.slug}}"
+        onerror="this.onerror = null; this.src='/static/default.jpg'" class="card-img-top img-fluid" alt="..." />
+    </div>
+
+  </div>
+
+  <div class="row viewPageButtons">
+    <div class="col-md-4 col-sm-8 px-lg-0 px-sm-2   btn-group ">
+      <a class="btn btn-primary py-2" href="https://www.google.com/maps?q={{attraction.name}}%20in%20{{attraction.city}}%20,Egypt" target="_blank" >Find on google maps</a>
+    </div>
+    <div class="col-md-6 col-sm-8 px-2  btn-group addButtonDiv">
+      <button type="button" class="btn btn-primary py-2 addButton" data-bs-toggle="modal"
+      data-bs-target="#modal{{attraction.id}}">
+      Add to my trip
+    </button>    </div>
+  </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal{{attraction.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <form action="/addtotrip" method="POST" id="myForm{{attraction.id}}" class="needs-validation" novalidate>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Add to my trip
+              </h1>
+              <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            </div>
+            <div class="modal-body">
+              When do you want to visit <b>{{attraction.name}}</b> ?
+              <input type="hidden" name="attraction_id" value="{{attraction.id}}" />
+              <div class="col-md-6">
+                <input type="date" name="date" class="form-control form-control-lg mt-3" id="validationCustom03"
+                  required />
+                <div class="dateValidationMessage"></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button type="button" name="{{attraction.id}}" onclick="submitForm(name)" class="btn btn-success">
+                Add
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+<script>
+  async function submitForm(id) {
+    const formData = new FormData(document.getElementById(`myForm${id}`));
+    let date = formData.get("date");
+
+    let modelElem = document.querySelector(`#modal${id}`);
+    dateValidationMessage = modelElem.querySelector(".dateValidationMessage");
+
+    if (!date) {
+      dateValidationMessage.textContent =
+        "Please enter the date you want to visit this attraction";
+    } else {
+      const apiUrl = "/addtotrip";
+      try {
+        await fetch(apiUrl, {
+          method: "POST",
+          body: formData,
+        });
+      } catch (error) {
+        console.error("Error:", error);
+      }
+      dateValidationMessage.textContent = "";
+
+      let modalInstance = bootstrap.Modal.getInstance(modelElem);
+      modelElem.addEventListener("shown.bs.modal", function () {
+        modalInstance = bootstrap.Modal.getInstance(modelElem);
+      });
+      modalInstance.hide();
+    }
+  }
+</script>
+
+{% endblock %}
