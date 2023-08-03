@@ -11,7 +11,8 @@
   align-items: center;
   justify-content: center;
   padding: 100px 0;
-  background-color: #FDF8F0;
+  background-color: #d6d8d0 ;
+  border-radius: 20px;
 }
 
 .timeline {
@@ -50,6 +51,9 @@
   line-height: 30px;
   font-weight: 300;
 }
+.timeline-content p .cityName {
+  font-weight: 700;
+}
 
 .timeline-content .date {
   font-weight: bold;
@@ -59,6 +63,10 @@
   font-weight: 300;
   margin-bottom: 10px;
   letter-spacing: 2px;
+  border: 2px solid #21606F;
+  border-radius: 10px;
+  padding: 3px 5px;
+  border-bottom: none;
 }
 
 
@@ -131,15 +139,31 @@
   .timeline-content .date {
     font-size: 1rem;
     font-weight: bold;
-    color: #111;
+    /* color: #111; */
     position: absolute;
-    top: -30px;
+    top: -21px;
+    color: white;
+    background-color: #21606F;
   }
 
   .timeline ul li:hover::before {
     background-color: #2a415b ;
   }
+  .timeline-content h1 {
+    margin-top: 10px;
+  }
 }
 
 
+
+@media (max-width:750px) {
+  .container-tl {
+    padding: 50px 0;
+  }
+  .timeline ul {
+    padding-left: 0;
+
+  }
+
+}
 

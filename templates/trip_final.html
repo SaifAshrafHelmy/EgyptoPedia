@@ -13,7 +13,7 @@
 
 
 <div class="container">
-  <div class="row mt-4">
+  <div class="row mt-4 mb-2">
     <h1>My Trip:</h1>
   </div>
 
@@ -21,9 +21,11 @@
 
 <div class="container-tl">
   {% if not data %}
-  <div class="no-data-warning">
-    <p >You haven't added any destinations to your trip yet,</p>
+  <div class="row no-data-warning">
+    <div class="col-10">
+      <p >You haven't added any destinations to your trip yet,</p>
     <p > Please add them from the <a href="/attractions">attractions</a> page.</p>
+    </div>
 
   </div>
   {% else %}
@@ -34,9 +36,9 @@
 
       <li>
         <div class="timeline-content">
-          <h3 class="date">{{trip_visit.visit_date}}</h3>
+          <h3 class="date">on {{trip_visit.visit_date.strftime('%d-%b-%Y')}}</h3>
           <h1>{{attraction.name}}</h1>
-          <p>{{attraction.city}}</p>
+          <p>City: <span class="cityName">{{attraction.city}}</span></p>
           <div class="d-flex justify-content-center"> 
             <form action="/removefromtrip" method="post">
               <input type="hidden" name="trip_visit_id" value="{{trip_visit.id}}">
