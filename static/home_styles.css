@@ -6,6 +6,8 @@ body{
 
   color: white !important;
   background-color: rgba(0, 0, 0, 0.2);
+  /* height: 100%; */
+  min-height: 100vh;
 }
 
 p:not(.loggedInContainer p), h2, li {
@@ -29,6 +31,15 @@ ul{
 
 .theHome{
   height: 100%;
+}
+
+.linkToAttraction{
+  box-shadow: rgba(0, 0, 0, 0.3) -3px 6px 12px 1px;
+  border: none;
+}
+.linkToAttraction:hover{
+  scale: 1.05;
+  transition: 0.2s;
 }
 
 @media only screen and (max-width: 768px) {

@@ -25,6 +25,7 @@ class Attraction(db.Model):
     location_longitude = db.Column(db.REAL)
     summary = db.Column(db.String(200))
     description = db.Column(db.String)
+    image = db.Column(db.String)
 
 
 class Trip_visit(db.Model):

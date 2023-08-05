@@ -11,7 +11,7 @@
     <form action="/attractions" method="post" class="col-md-6">
       <div class="input-group me-5 searchForm">
         
-        <div class="form-outline">
+        <div class="">
           <input type="search" name="attraction_name" id="searchInput" placeholder="Search all destinations"
             class="form-control form-control-lg rounded-end-0" />
         </div>
@@ -54,11 +54,14 @@
     {% for attraction in attractions %}
 
     <div class="card mx-3 my-3 px-0" style="width: 18rem">
-      <img src="https://source.unsplash.com/random/400x300/?{{attraction.slug}}"
-        onerror="this.onerror = null; this.src='/static/default.jpg'" class="card-img-top" alt="..." />
+     <div class="imgContainer">
+      <img src="{{attraction.image}}"
+      onerror="this.onerror = null; this.src='/static/default.jpg'" class="card-img-top" alt="..." />
+     </div>
       <div class="card-body d-flex flex-column">
         <h5 class="card-title">{{attraction.name}}</h5>
         <p class="card-text">{{attraction.summary}}</p>
+        <p class="card-text">City: {{attraction.city}}</p>
         <a href="/attractions/view/{{attraction.id}}" class="btn btn-primary mt-auto viewButton">View</a>
         <button type="button" class="btn btn-primary mt-2 addButton" data-bs-toggle="modal"
           data-bs-target="#modal{{attraction.id}}">

@@ -81,7 +81,7 @@ def login():
 
     if request.method == "POST":
         if form.validate_on_submit():
-            username = request.form.get("username")
+            username = request.form.get("username").lower()
             password = request.form.get("password")
             next = request.form.get("next")
 
@@ -124,7 +124,7 @@ def register():
     if request.method == "POST":
         if form.validate_on_submit():
 
-            username = request.form.get("username")
+            username = request.form.get("username").lower()
             usernameAlreadyExists = db.session.query(User).filter(User.username == username).all()
             if(usernameAlreadyExists):
                 flash('Username already exists.', 'warning')
@@ -243,7 +243,7 @@ def view_page(attraction_id):
     attraction = db.session.query(Attraction).get(attraction_id)
     slug = attraction.name.replace(' ', '&')
     attraction.slug = slug
-    print(attraction.name)
+    # print(attraction.name)
     return render_template('view_page.html', attraction=attraction)
 
 

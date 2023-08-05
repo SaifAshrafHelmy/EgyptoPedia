@@ -1,7 +1,7 @@
 from flask import Flask
 from models import db, User, Attraction, Trip_visit
 from cities import egypt_cities
-from attractionsList import attractions 
+from attractionsListWithImages import attractions 
 import datetime
 
 app = Flask(__name__)
@@ -22,7 +22,7 @@ with app.app_context():
   db.session.commit()
 
 
-with app.app_context():
-  v1 = Trip_visit(visit_date = datetime.datetime(2024,9,15), user_id = 1, attraction_id = 9 )    
-  db.session.add(v1)
-  db.session.commit()  
+# with app.app_context():
+#   v1 = Trip_visit(visit_date = datetime.datetime(2024,9,15), user_id = 1, attraction_id = 9 )    
+#   db.session.add(v1)
+#   db.session.commit()  
