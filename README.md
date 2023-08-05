@@ -29,10 +29,9 @@ EgyptoPedia is a Flask-based web application that allows users to explore variou
 3. Install the required dependencies: \
    pip install -r requirements.txt
 
-4. Create the database and initialize tables: \
-   python app.py db init \
-   python app.py db migrate \
-   python app.py db upgrade 
+4. Create the database and initialize tables and seed intial data: \
+   python seed.py 
+
 
 5. Set environment variables by creating a .env file in the project root directory and adding the following line: \
    my_secret_key=your_secret_key_here \
